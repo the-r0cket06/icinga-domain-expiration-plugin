@@ -76,6 +76,10 @@ check_domain()
 			EXDATE=$(${WHOIS} -h whois.dns.pl "${1}" | ${AWK} '/expiration date:/ { gsub("[:.]","-"); print $3 }')
 		fi
 		EXP_DAYS=$(( ( $(date -ud ${EXDATE} +'%s') - $(date -ud `date +%Y-%m-%d` +'%s') )/60/60/24 ))
+	elif [ "$DTYPE" == "ca" ]
+	then
+		EXDATE=$(${WHOIS} -h whois.cira.ca "${1}" | ${AWK} '/Registry Expiry Date/' | cut -c 23-32)
+		EXP_DAYS=$(( ( $(date -ud ${EXDATE} +'%s') - $(date -ud `date +%Y-%m-%d` +'%s') )/60/60/24 ))
 	else
 		echo "UNKNOWN - "$DTYPE" unsupported"
 		exit 3
